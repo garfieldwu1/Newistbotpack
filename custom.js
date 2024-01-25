@@ -1,136 +1,92 @@
-const logger = require('./utils/log');
+const axios = require('axios');
 const cron = require('node-cron');
-const axios = require("axios");
-const fs = require('fs-extra');
-const PREFIX = true;
 
 module.exports = async ({ api }) => {
-  const minInterval = 5;
-  let lastMessageTime = 0;
-  let messagedThreads = new Set();
+  const messagedThreads = new Set();
 
-  const config = {
-    autoRestart: {
-      status: false,
-      time: 40,
-      note: 'To avoid problems, enable periodic bot restarts',
-    },
-    acceptPending: {
-      status: false,
-      time: 30,
-      note: 'Approve waiting messages after a certain time',
-    },
-  };
-
-  function autoRestart(config) {
-    if (config.status) {
-      cron.schedule(`*/${config.time} * * * *`, () => {
-        logger('Start rebooting the system!', 'Auto Restart');
-        process.exit(1);
-      });
+  async function sendMessage(body, threadID) {
+    try {
+      await api.sendMessage({ body }, threadID);
+      messagedThreads.add(threadID);
+    } catch (error) {
+      console.error("Error sending a message:", error);
     }
   }
 
-  function acceptPending(config) {
-    if (config.status) {
-      cron.schedule(`*/${config.time} * * * *`, async () => {
-        const list = [
-          ...(await api.getThreadList(1, null, ['PENDING'])),
-          ...(await api.getThreadList(1, null, ['OTHER'])),
-        ];
-        if (list[0]) {
-          api.sendMessage('You have been approved for the queue. (This is an automated message)', list[0].threadID);
-        }
-      });
-    }
-  }
+  async function sendMotivation() {
+    try {
+      const quoteResponse = await axios.get('https://api.quotable.io/random');
+      const quote = quoteResponse.data.content;
+      const formattedQuoteMessage = `
+🔔 𝖣𝖺𝗂𝗅𝗒 𝖬𝗈𝗍𝗂𝗏𝖺𝗍𝗂𝗈𝗇!
 
-  autoRestart(config.autoRestart);
-  acceptPending(config.acceptPending);
+${quote}
 
-  // AUTOGREET EVERY 10 MINUTES
-  cron.schedule('*/10 * * * *', () => {
-    const currentTime = Date.now();
-    if (currentTime - lastMessageTime < minInterval) {
-      console.log("Skipping message due to rate limit");
-      return;
-    }
-    api.getThreadList(25, null, ['INBOX'], async (err, data) => {
-      if (err) return console.error("Error [Thread List Cron]: " + err);
+- ${quoteResponse.data.author}
+`;
+      const threads = await api.getThreadList(25, null, ['INBOX']);
       let i = 0;
       let j = 0;
 
-      async function message(thread) {
-        try {
-          api.sendMessage({
-            body: `⟩ Thank you for using BotPack!\n\n⟩ Fork Here: https://replit.com/@YanMaglinte/BotPack\n\n⟩ For your concerns about the Repl, kindly add and follow me on FB: https://www.facebook.com/yandeva.me?mibextid=ZbWKwL`
-          }, thread.threadID, (err) => {
-            if (err) return;
-            messagedThreads.add(thread.threadID);
-
-          });
-        } catch (error) {
-          console.error("Error sending a message:", error);
-        }
-      }
-
-      while (j < 20 && i < data.length) {
-        if (data[i].isGroup && data[i].name != data[i].threadID && !messagedThreads.has(data[i].threadID)) {
-          await message(data[i]);
+      while (j < 20 && i < threads.length) {
+        const thread = threads[i];
+        if (thread.isGroup && thread.name !== thread.threadID && !messagedThreads.has(thread.threadID)) {
+          await sendMessage(formattedQuoteMessage, thread.threadID);
           j++;
-          const CuD = data[i].threadID;
+          const currentThreadID = thread.threadID;
           setTimeout(() => {
-            messagedThreads.delete(CuD);
+            messagedThreads.delete(currentThreadID);
           }, 1000);
         }
         i++;
       }
-    });
-  }, {
+    } catch (error) {
+      console.error("Error sending motivation:", error);
+    }
+  }
+
+  async function sendBibleVerse() {
+    try {
+      const verseResponse = await axios.get('https://labs.bible.org/api/?passage=random&type=json');
+      const verse = verseResponse.data[0];
+      const formattedVerseMessage = `
+🔔 𝖣𝖺𝗂𝗅𝗒 𝖡𝗂𝖻𝗅𝖾 𝖵𝖾𝗋𝗌𝖾:
+
+${verse.text}
+
+- ${verse.bookname} ${verse.chapter}:${verse.verse}
+`;
+      const threads = await api.getThreadList(25, null, ['INBOX']);
+      let i = 0;
+      let j = 0;
+
+      while (j < 20 && i < threads.length) {
+        const thread = threads[i];
+        if (thread.isGroup && thread.name !== thread.threadID && !messagedThreads.has(thread.threadID)) {
+          await sendMessage(formattedVerseMessage, thread.threadID);
+          j++;
+          const currentThreadID = thread.threadID;
+          setTimeout(() => {
+            messagedThreads.delete(currentThreadID);
+          }, 1000);
+        }
+        i++;
+      }
+    } catch (error) {
+      console.error("Error sending Bible verse:", error);
+    }
+  }
+
+
+
+  // Schedule to send motivation every 30 minutes
+  cron.schedule('*/20 * * * *', sendMotivation, {
     scheduled: true,
     timezone: "Asia/Manila"
   });
 
-  // AUTOGREET EVERY 15 MINUTES
-  cron.schedule('*/15 * * * *', () => {
-    const currentTime = Date.now();
-    if (currentTime - lastMessageTime < minInterval) {
-      console.log("Skipping message due to rate limit");
-      return;
-    }
-    api.getThreadList(25, null, ['INBOX'], async (err, data) => {
-      if (err) return console.error("Error [Thread List Cron]: " + err);
-      let i = 0;
-      let j = 0;
-
-      async function message(thread) {
-        try {
-          api.sendMessage({
-            body: `Hey There! How are you? ヾ(＾-＾)ノ`
-          }, thread.threadID, (err) => {
-            if (err) return;
-            messagedThreads.add(thread.threadID);
-
-          });
-        } catch (error) {
-          console.error("Error sending a message:", error);
-        }
-      }
-
-
-      while (j < 20 && i < data.length) {
-        if (data[i].isGroup && data[i].name != data[i].threadID && !messagedThreads.has(data[i].threadID)) {
-          await message(data[i]);
-          j++;
-          const CuD = data[i].threadID;
-          setTimeout(() => {
-            messagedThreads.delete(CuD);
-          }, 1000);
-        }
-        i++;
-      }
-    });
-  }, {
+  // Schedule to send Bible verse every day
+  cron.schedule('0 6 * * *', sendBibleVerse, {
     scheduled: true,
     timezone: "Asia/Manila"
   });
