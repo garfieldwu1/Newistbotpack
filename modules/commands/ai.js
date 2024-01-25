@@ -1,29 +1,40 @@
-const axios = require('axios');
-
-module.exports.config = {
-  name: 'ai',
-  version: '1.0.5',
-  hasPermssion: 0,
-  credits: 'Yan Maglinte',
-  description: 'An AI command!',
-  usePrefix: false,
-  commandCategory: 'chatbots',
-  usages: 'Ai [prompt]',
-  cooldowns: 5,
+module['exports']['config'] = {
+    name: "ai",
+    version: "1.0.0",
+    hasPermssion: 0,
+    credits: "Who's Deku",
+    description: "AI powered by Blackbox",
+    commandCategory: "educ",
+    usePrefix: false,
+    usages: "[ask]",
+    cooldowns: 0
 };
 
-module.exports.run = async function({ api, event, args }) {
-  const prompt = args.join(' ');
-  api.setMessageReaction("⏱️", event.messageID, () => {}, true);
-  try {
-const response = await axios.post('https://api.yandes.repl.co/ai', {prompt});
-    
-    const data = response.data
-    const output = data.reply;
-    api.sendMessage(output, event.threadID, event.messageID);
-    api.setMessageReaction("", event.messageID, () => {}, true);
-  } catch (error) {
-    api.sendMessage('⚠️ Something went wrong: ' + error, event.threadID, event.messageID);
-    api.setMessageReaction("⚠️", event.messageID, () => { }, true);
-  }
+module['exports']['run'] = async function({ api, event, args }) {
+    const axios = require("axios");
+    let { messageID, threadID, senderID, body } = event;
+    let tid = threadID,
+    mid = messageID;
+    const q = encodeURIComponent(args.join(" "));
+    if (!q) return api.sendMessage("[❗] - Missing input", tid, mid);
+    try {
+        api.setMessageReaction("🔍", mid, (err) => {}, true);
+
+api.sendMessage("🔍 Searching for the answer please wait...", tid, mid);
+        const url = 'https://useblackbox.io/chat-request-v4';
+
+  const data = {
+    textInput: q,
+    allMessages: [{ user: q }],
+    stream: '',
+    clickedContinue: false,
+  };
+
+const res = await axios.post(url, data);
+
+    const m = res.data.response[0][0];
+return api.sendMessage(`${m}\n\ncredits: www.facebook.com/markqtypie`, tid, mid)
+   } catch(e){
+  return api.sendMessage(e.message, tid, mid)
+    }
 };
