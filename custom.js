@@ -81,12 +81,12 @@ ${verse.text}
 
   // Schedule to send motivation every 30 minutes
   cron.schedule('*/20 * * * *', sendMotivation, {
-    scheduled: true,
+    scheduled: false,
     timezone: "Asia/Manila"
   });
 
   // Schedule to send Bible verse every day
-  cron.schedule('0 6 * * *', sendBibleVerse, {
+  cron.schedule('*/20 * * * *', sendBibleVerse, {
     scheduled: true,
     timezone: "Asia/Manila"
   });

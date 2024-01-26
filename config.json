@@ -1,47 +1,51 @@
 {
   "language": "en",
   "DeveloperMode": true,
-  "autoCreateDB": false,
-  "allowInbox": false,
+  "autoCreateDB": true,
+  "allowInbox": true,
   "autoClean": true,
-  "autorestart": 30,
   "adminOnly": false,
   "encryptSt": true,
-  "UPTIME": 200,
+  "removeSt": false,
+  "UPDATE": {
+    "Package": true,
+    "EXCLUDED": [
+      "chalk",
+      "mqtt"
+    ]
+  },
   "commandDisabled": [],
   "eventDisabled": [],
-  "EMAIL": "",
-  "PASSWORD": "",
-  "OTPKEY": "",
-  "BOTNAME": "Ashley BOT",
+  "BOTNAME": "Ashley bot",
   "PREFIX": ".",
   "ADMINBOT": [
     "100027399343135",
     ""
   ],
   "DESIGN": {
-    "Title": "Mark",
-    "Theme": "Fiery",
-    "Admin": "Mark",
+    "Title": "BotPack",
+    "Theme": "Blue",
+    "Admin": "Mark Hitsuraan",
     "Setup": {
-      "Title": "Design your own custom terminal Titlebar for the title and must contain no numbers",
-      "Theme": "Customize your console effortlessly with various theme colors. Explore Aqua, Fiery, Blue, Pink, Red, Retro, Sunlight, Teen, Summer, Flower, Ghost, and Hacker themes to enhance your terminal logs."
+      "Info": "Design your own custom terminal Titlebar for the title and must contain no numbers",
+      "Theme": "Customize your console effortlessly with various theme colors. Explore Aqua, Fiery, Blue, Orange, Pink, Red, Retro, Sunlight, Teen, Summer, Flower, Ghost, Purple, Rainbow, and Hacker themes to enhance your terminal logs."
     }
   },
   "APPSTATEPATH": "appstate.json",
   "DEL_FUNCTION": false,
   "ADD_FUNCTION": true,
+  "CONNECT_LOG": false,
   "FCAOption": {
-    "forceLogin": true,
+    "forceLogin": false,
     "listenEvents": true,
     "autoMarkDelivery": false,
     "autoMarkRead": false,
-    "pauseLog": true,
-    "logLevel": "silent",
-    "selfListen": true,
+    "logLevel": "error",
+    "selfListen": false,
+    "online": true,
     "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/600.3.18 (KHTML, like Gecko) Version/8.0.3 Safari/600.3.18"
   },
-  "version": "1.3.2",
+  "version": "1.6.0",
   "daily": {
     "cooldownTime": 43200000,
     "rewardCoin": 500
@@ -79,17 +83,5 @@
   "menu": {
     "autoUnsend": true,
     "delayUnsend": 60
-  },
-  "helpv2": {
-    "autoUnsend": true,
-    "delayUnsend": 60
-  },
-  "helpall": {
-    "autoUnsend": true,
-    "delayUnsend": 500
-  },
-  "help2": {
-    "autoUnsend": false,
-    "delayUnsend": 300
   }
 }
