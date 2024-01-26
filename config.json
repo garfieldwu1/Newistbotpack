@@ -1,25 +1,28 @@
 {
   "language": "en",
   "DeveloperMode": true,
-  "autoCreateDB": true,
-  "allowInbox": true,
+  "autoCreateDB": false,
+  "allowInbox": false,
   "autoClean": true,
+  "autorestart": 30,
   "adminOnly": false,
   "encryptSt": true,
   "UPTIME": 200,
   "commandDisabled": [],
   "eventDisabled": [],
-  "BOTNAME": "Bot",
-  "PREFIX": "?",
+  "EMAIL": "",
+  "PASSWORD": "",
+  "OTPKEY": "",
+  "BOTNAME": "Ashley BOT",
+  "PREFIX": ".",
   "ADMINBOT": [
-    "YOUR_FB_UID",
-    "OTHER_FB_UID",
-    "100005057593971"
+    "100027399343135",
+    ""
   ],
   "DESIGN": {
-    "Title": "BotPack",
-    "Theme": "Blue",
-    "Admin": "YOUR_NAME",
+    "Title": "Mark",
+    "Theme": "Fiery",
+    "Admin": "Mark",
     "Setup": {
       "Title": "Design your own custom terminal Titlebar for the title and must contain no numbers",
       "Theme": "Customize your console effortlessly with various theme colors. Explore Aqua, Fiery, Blue, Pink, Red, Retro, Sunlight, Teen, Summer, Flower, Ghost, and Hacker themes to enhance your terminal logs."
@@ -28,18 +31,17 @@
   "APPSTATEPATH": "appstate.json",
   "DEL_FUNCTION": false,
   "ADD_FUNCTION": true,
-  "CONNECT_LOG": false,
   "FCAOption": {
-    "forceLogin": false,
+    "forceLogin": true,
     "listenEvents": true,
     "autoMarkDelivery": false,
     "autoMarkRead": false,
-    "logLevel": "error",
-    "selfListen": false,
-    "online": true,
+    "pauseLog": true,
+    "logLevel": "silent",
+    "selfListen": true,
     "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/600.3.18 (KHTML, like Gecko) Version/8.0.3 Safari/600.3.18"
   },
-  "version": "1.5.1",
+  "version": "1.3.2",
   "daily": {
     "cooldownTime": 43200000,
     "rewardCoin": 500
@@ -48,8 +50,8 @@
     "cooldownTime": 1200000
   },
   "help": {
-    "autoUnsend": true,
-    "delayUnsend": 60
+    "autoUnsend": false,
+    "delayUnsend": 30
   },
   "adminUpdate": {
     "autoUnsend": true,
@@ -77,5 +79,17 @@
   "menu": {
     "autoUnsend": true,
     "delayUnsend": 60
+  },
+  "helpv2": {
+    "autoUnsend": true,
+    "delayUnsend": 60
+  },
+  "helpall": {
+    "autoUnsend": true,
+    "delayUnsend": 500
+  },
+  "help2": {
+    "autoUnsend": false,
+    "delayUnsend": 300
   }
 }
