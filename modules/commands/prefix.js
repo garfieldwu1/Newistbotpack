@@ -1,32 +1,24 @@
-const fs = require("fs");
-
 module.exports.config = {
   name: "prefix",
-  version: "1.0.1",
+  version: "1.0.2",
   hasPermssion: 0,
-  credits: "Blue",
-  description: "no prefix",
-  commandCategory: "utility",
-  usePrefix: false,
-  usages: "...",
+  credits: "Marjhun Baylon",
+  description: "prefix",
+  usePrefix: "false",
+  commandCategory: "system",
+  usages: "[Name module]",
   cooldowns: 1,
-};
-
-module.exports.handleEvent = function ({ api, event, client, __GLOBAL }) {
-  var { threadID, messageID } = event;
-  if (
-    event.body.indexOf("prefix") == 0 ||
-    event.body.indexOf("Prefix") == 0 ||
-    event.body.indexOf("Ano prefix") == 0 ||
-    event.body.indexOf("ano prefix") == 0
-  ) {
-    const moment = require("moment-timezone");
-    var gio = moment.tz("Asia/Manila").format("HH:mm:ss || D/MM/YYYY");
-    var msg = {
-      body: `╭┈ ❒ MY PREFIX\n╰┈➤ ${global.config.PREFIX}\n╭┈ ❒ Type this for educ.\n╰┈➤ [ ${global.config.PREFIX}ai ]`,
-    };
-    api.sendMessage(msg, threadID, messageID);
+  envConfig: {
+    autoUnsend: false,
+    delayUnsend: 20
   }
 };
 
-module.exports.run = function ({ api, event, client, __GLOBAL }) {};
+module.exports.run = async function({ api, event }) {
+
+  api.sendMessage(`╭┈ ❒ MY PREFIX\n╰┈➤ ${global.config.PREFIX}\n╭┈ ❒ Type this for educ.\n╰┈➤ [ ai ] - [ Ai ]`,
+
+  event.threadID, event.messageID);
+
+
+}

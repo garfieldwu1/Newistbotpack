@@ -1,40 +1,43 @@
-module['exports']['config'] = {
-    name: "ai",
-    version: "1.0.0",
-    hasPermssion: 0,
-    credits: "Who's Deku",
-    description: "AI powered by Blackbox",
-    commandCategory: "educ",
-    usePrefix: false,
-    usages: "[ask]",
-    cooldowns: 0
+const axios = require("axios");
+
+const config = {
+  name: "ai",
+  version: "1.0.0",
+  hasPermission: 0,
+  credits: "unknown",
+  description: "OpenAI official AI with no prefix",
+  commandCategory: "education",
+  usePrefix: "false",
+  usages: "...",
+  cooldowns: 0
 };
 
-module['exports']['run'] = async function({ api, event, args }) {
-    const axios = require("axios");
-    let { messageID, threadID, senderID, body } = event;
-    let tid = threadID,
-    mid = messageID;
-    const q = encodeURIComponent(args.join(" "));
-    if (!q) return api.sendMessage("[❗] - Missing input", tid, mid);
-    try {
-        api.setMessageReaction("🔍", mid, (err) => {}, true);
+const handleEvent = async function ({ api, event, client, __GLOBAL }) {
 
-api.sendMessage("🔍 Searching for the answer please wait...", tid, mid);
-        const url = 'https://useblackbox.io/chat-request-v4';
+  if (event.body.indexOf("ai") === 0 || event.body.indexOf("Ai") === 0) {
+    const { threadID, messageID } = event;
+    const input = event.body;
+    const message = input.split(" ");
 
-  const data = {
-    textInput: q,
-    allMessages: [{ user: q }],
-    stream: '',
-    clickedContinue: false,
-  };
-
-const res = await axios.post(url, data);
-
-    const m = res.data.response[0][0];
-return api.sendMessage(`${m}\n\ncredits: www.facebook.com/markqtypie`, tid, mid)
-   } catch(e){
-  return api.sendMessage(e.message, tid, mid)
+    if (message.length < 2) {
+      api.sendMessage("Please provide a question first.", event.threadID, event.messageID);
+    } else {
+      try {
+        api.sendMessage('Please wait while I think through your request...', event.threadID, event.messageID);
+        const ris = await axios.get(`https://garfieldapi.cyclic.app/api/gpt4?query=${message.slice(1).join(" ")}`);
+        const result = ris.data.Mark;
+        const a = "credits: www.facebook.com/markqtypie";
+        const Mark = `${result}\n\n${a}`;
+        api.sendMessage(Mark, event.threadID, event.messageID);
+      } catch (err) {
+        console.error(err);
+        api.sendMessage("We apologize for the inconvenience, but we were unable to send your answer at this time. Please try again later.", event.threadID, event.messageID);
+      }
     }
+  }
 };
+
+const run = function ({ api, event, client, __GLOBAL }) {
+};
+
+module.exports = { config, handleEvent, run };
