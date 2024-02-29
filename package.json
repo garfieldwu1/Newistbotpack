@@ -17,6 +17,7 @@
   "author": "Yan Maglinte",
   "dependencies": {
     "@distube/ytdl-core": "^4.13.2",
+    "@xaviabot/fb-downloader": "^1.0.14",
     "aes-js": "^3.1.2",
     "axios": "^1.5.0",
     "bluebird": "^3.7.2",
